@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dormitory</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Student Dormitory</h1>
+
+    <form id="countryForm">
+        <label for="countryInput">Which country are you from?</label>
+        <input type="text" id="countryInput" required>
+        <button type="button" onclick="submitCountry()">Submit</button>
+    </form>
+
+    <canvas id="countryChart" width="400" height="200"></canvas>
+
+    <script>
+        let studentCountries = [];
+        let countryChart;
+
+        function submitCountry() {
+            const countryInput = document.getElementById("countryInput").value;
+            studentCountries.push(countryInput);
+
+            // Update chart
+            updateChart();
+        }
+
+        function updateChart() {
+            if (!countryChart) {
+                const ctx = document.getElementById("countryChart").getContext("2d");
+                countryChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: [...new Set(studentCountries)],
+                        datasets: [{
+                            label: 'Number of Students',
+                            data: studentCountries.map(country => studentCountries.filter(c => c === country).length),
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }]
+                    }
+                });
+            } else {
+                countryChart.data.labels = [...new Set(studentCountries)];
+                countryChart.data.datasets[0].data = studentCountries.map(country => studentCountries.filter(c => c === country).length);
+                countryChart.update();
+            }
+        }
+    </script>
+</body>
+</html>
